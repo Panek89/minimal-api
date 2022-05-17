@@ -1,4 +1,4 @@
-using minimal_api.Entities;
+using minimal_api.Routing;
 using minimal_api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,10 +20,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/cars", (ICarService service) => service.GetAllCars());
-app.MapGet("/cars/{id}", (ICarService service, Guid id) => service.GetById(id));
-app.MapPost("/cars", (ICarService service, Car car) => service.Create(car));
-app.MapPut("/cars/{id}", (ICarService service, Guid id, Car car) => service.Update(id, car));
-app.MapDelete("/cars/{id}", (ICarService service, Guid id) => service.Delete(id));  
+app.MapCarsApi();
 
 app.Run();
