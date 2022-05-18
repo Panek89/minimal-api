@@ -19,7 +19,7 @@ namespace minimal_api.Services
 
         public Car GetById(Guid id)
         {
-            return _cars[id];
+            return _cars.GetValueOrDefault(id);
         }
 
         public void Create(Car car)

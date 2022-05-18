@@ -1,5 +1,4 @@
-using minimal_api.Entities;
-using minimal_api.Services;
+using minimal_api.Requests;
 
 namespace minimal_api.Routing
 {
@@ -7,11 +6,12 @@ namespace minimal_api.Routing
     {
         public static IEndpointRouteBuilder MapCarsApi(this IEndpointRouteBuilder routes)
         {
-            routes.MapGet("/cars", (ICarService service) => service.GetAllCars());
-            routes.MapGet("/cars/{id}", (ICarService service, Guid id) => service.GetById(id));
-            routes.MapPost("/cars", (ICarService service, Car car) => service.Create(car));
-            routes.MapPut("/cars/{id}", (ICarService service, Guid id, Car car) => service.Update(id, car));
-            routes.MapDelete("/cars/{id}", (ICarService service, Guid id) => service.Delete(id));  
+            routes.MapGet("/cars", CarRequests.GetAllCars);
+            routes.MapGet("/cars/{id}", CarRequests.GetById);
+            routes.MapPost("/cars", CarRequests.Create);
+            routes.MapPut("/cars/{id}", CarRequests.Update);
+            routes.MapDelete("/cars/{id}", CarRequests.Delete);
+            
             return routes;
         }
     }
