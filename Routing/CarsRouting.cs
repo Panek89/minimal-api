@@ -1,3 +1,4 @@
+using minimal_api.Entities;
 using minimal_api.Requests;
 
 namespace minimal_api.Routing
@@ -6,11 +7,26 @@ namespace minimal_api.Routing
     {
         public static IEndpointRouteBuilder MapCarsApi(this IEndpointRouteBuilder routes)
         {
-            routes.MapGet("/cars", CarRequests.GetAllCars);
-            routes.MapGet("/cars/{id}", CarRequests.GetById);
-            routes.MapPost("/cars", CarRequests.Create);
-            routes.MapPut("/cars/{id}", CarRequests.Update);
-            routes.MapDelete("/cars/{id}", CarRequests.Delete);
+            routes.MapGet("/cars", CarRequests.GetAllCars)
+                .Produces<List<Car>>(StatusCodes.Status200OK);
+
+            routes.MapGet("/cars/{id}", CarRequests.GetById)
+                .Produces<Car>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status404NotFound);
+
+            routes.MapPost("/cars", CarRequests.Create)
+                .Accepts<Car>("Application/Json")
+                .Produces<Car>(StatusCodes.Status201Created);
+
+            routes.MapPut("/cars/{id}", CarRequests.Update)
+                .Accepts<Car>("Application/Json")
+                .Produces(StatusCodes.Status204NoContent)
+                .Produces(StatusCodes.Status404NotFound);
+
+            routes.MapDelete("/cars/{id}", CarRequests.Delete)
+                .Produces(StatusCodes.Status204NoContent)
+                .Produces(StatusCodes.Status404NotFound);
+
             
             return routes;
         }
