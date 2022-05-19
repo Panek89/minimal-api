@@ -21,12 +21,8 @@ namespace minimal_api.Requests
             return Results.Ok(carById);
         }
 
-        public static IResult Create(ICarService service, Car car, IValidator<Car> validator)
-        {
-            var validationResult = validator.Validate(car);
-            if (!validationResult.IsValid)
-                return Results.BadRequest(validationResult.Errors);
-                
+        public static IResult Create(ICarService service, Car car)
+        {       
             service.Create(car);
 
             return Results.Created($"/cars/{car.Id}", car);

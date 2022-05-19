@@ -1,6 +1,6 @@
 using minimal_api.Entities;
+using minimal_api.Extensions;
 using minimal_api.Requests;
-using minimal_api.Services;
 
 namespace minimal_api.Routing
 {
@@ -18,12 +18,15 @@ namespace minimal_api.Routing
             routes.MapPost("/cars", CarRequests.Create)
                 .Accepts<Car>("Application/Json")
                 .Produces<Car>(StatusCodes.Status201Created)
-                .Produces(StatusCodes.Status400BadRequest);
+                .Produces(StatusCodes.Status400BadRequest)
+                .WithValidator<Car>();
 
             routes.MapPut("/cars/{id}", CarRequests.Update)
                 .Accepts<Car>("Application/Json")
                 .Produces(StatusCodes.Status204NoContent)
-                .Produces(StatusCodes.Status404NotFound);
+                .Produces(StatusCodes.Status400BadRequest)
+                .Produces(StatusCodes.Status404NotFound)
+                .WithValidator<Car>();
 
             routes.MapDelete("/cars/{id}", CarRequests.Delete)
                 .Produces(StatusCodes.Status204NoContent)
