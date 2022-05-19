@@ -1,5 +1,6 @@
 using minimal_api.Entities;
 using minimal_api.Requests;
+using minimal_api.Services;
 
 namespace minimal_api.Routing
 {
@@ -16,7 +17,8 @@ namespace minimal_api.Routing
 
             routes.MapPost("/cars", CarRequests.Create)
                 .Accepts<Car>("Application/Json")
-                .Produces<Car>(StatusCodes.Status201Created);
+                .Produces<Car>(StatusCodes.Status201Created)
+                .Produces(StatusCodes.Status400BadRequest);
 
             routes.MapPut("/cars/{id}", CarRequests.Update)
                 .Accepts<Car>("Application/Json")

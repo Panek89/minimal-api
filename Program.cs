@@ -1,5 +1,7 @@
+using FluentValidation;
 using minimal_api.Routing;
 using minimal_api.Services;
+using minimal_api.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ICarService, CarService>();
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(CarValidator));
 
 var app = builder.Build();
 

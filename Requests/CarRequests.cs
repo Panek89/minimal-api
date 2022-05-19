@@ -1,3 +1,4 @@
+using FluentValidation;
 using minimal_api.Entities;
 using minimal_api.Services;
 
@@ -14,16 +15,18 @@ namespace minimal_api.Requests
         public static IResult GetById(ICarService service, Guid id)
         {
             var carById = service.GetById(id);
-            if (carById == null)
-            {
+            if (carById is null)
                 return Results.NotFound();
-            }
 
             return Results.Ok(carById);
         }
 
-        public static IResult Create(ICarService service, Car car)
+        public static IResult Create(ICarService service, Car car, IValidator<Car> validator)
         {
+            var validationResult = validator.Validate(car);
+            if (!validationResult.IsValid)
+                return Results.BadRequest(validationResult.Errors);
+                
             service.Create(car);
 
             return Results.Created($"/cars/{car.Id}", car);
@@ -33,9 +36,7 @@ namespace minimal_api.Requests
         {
             var carForUpdate = service.GetById(id);
             if (carForUpdate is null)
-            {
                 return Results.NotFound();
-            }
 
             service.Update(id, car);
             return Results.NoContent();
@@ -45,9 +46,7 @@ namespace minimal_api.Requests
         {
             var carForDelete = service.GetById(id);
             if (carForDelete is null)
-            {
                 return Results.NotFound();
-            }
 
             service.Delete(id);
             return Results.NoContent();
