@@ -1,4 +1,6 @@
+using System.Text;
 using FluentValidation;
+using Microsoft.IdentityModel.Tokens;
 using minimal_api.Routing;
 using minimal_api.Services;
 using minimal_api.Validation;
@@ -12,7 +14,23 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ICarService, CarService>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(CarValidator));
 
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(cfg => 
+    {
+        cfg.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidIssuer = builder.Configuration["JwtValidIssuer"],
+            ValidAudience = builder.Configuration["JwtValidIssuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JwtSigningKey"]))
+        };
+    });
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -24,5 +42,14 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapCarsApi();
+
+using(var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var config = services.GetRequiredService<IConfiguration>();
+    app.MapAuthApi(config);
+}
+
+app.Urls.Add("http://localhost:4000");
 
 app.Run();
