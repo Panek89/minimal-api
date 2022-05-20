@@ -9,13 +9,11 @@ namespace minimal_api.Routing
         public static IEndpointRouteBuilder MapCarsApi(this IEndpointRouteBuilder routes)
         {
             routes.MapGet("/cars", CarRequests.GetAllCars)
-                .Produces<List<Car>>(StatusCodes.Status200OK)
-                .RequireAuthorization();
+                .Produces<List<Car>>(StatusCodes.Status200OK);
 
             routes.MapGet("/cars/{id}", CarRequests.GetById)
                 .Produces<Car>(StatusCodes.Status200OK)
-                .Produces(StatusCodes.Status404NotFound)
-                .RequireAuthorization();
+                .Produces(StatusCodes.Status404NotFound);
 
             routes.MapPost("/cars", CarRequests.Create)
                 .Accepts<Car>("Application/Json")
@@ -33,7 +31,6 @@ namespace minimal_api.Routing
             routes.MapDelete("/cars/{id}", CarRequests.Delete)
                 .Produces(StatusCodes.Status204NoContent)
                 .Produces(StatusCodes.Status404NotFound);
-
             
             return routes;
         }

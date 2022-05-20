@@ -51,5 +51,6 @@ using(var scope = app.Services.CreateScope())
 }
 
 app.Urls.Add("http://localhost:4000");
+app.Urls.Add("https://localhost:4001");
 
 app.Run();

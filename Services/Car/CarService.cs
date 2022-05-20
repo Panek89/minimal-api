@@ -1,3 +1,4 @@
+using minimal_api.DB;
 using minimal_api.Entities;
 
 namespace minimal_api.Services
@@ -12,14 +13,20 @@ namespace minimal_api.Services
 
         private readonly Dictionary<Guid, Car> _cars = new();
 
-        public Dictionary<Guid, Car> GetAllCars()
+        public List<Car> GetAllCars()
         {
-            return _cars;
+            using (var context = new CarsContext())
+            {
+                return context.Cars.ToList();
+            }
         }
 
         public Car GetById(Guid id)
         {
-            return _cars.GetValueOrDefault(id);
+            using (var context = new CarsContext())
+            {
+                return context.Cars.Find(id);
+            }
         }
 
         public void Create(Car car)
@@ -28,24 +35,39 @@ namespace minimal_api.Services
             {
                 return;
             }
-
-            _cars[car.Id] = car;
+            
+            using (var context = new CarsContext())
+            {
+                context.Cars.Add(car);
+                context.SaveChanges();
+            }
         }
 
         public void Update(Guid id, Car car)
         {
-            var existingCar = GetById(id);
-
-            if(existingCar is null) 
+            using (var context = new CarsContext())
             {
-                return;
+                var existingCar = context.Cars.Find(id);
+                if(existingCar is null) 
+                {
+                    return;
+                }
+                existingCar.Manufacturer = car.Manufacturer;
+                existingCar.Model = car.Model;
+
+                context.SaveChanges();
             }
-            
-            _cars[id] = car;
         }
+        
         public void Delete(Guid id)
         {
-            _cars.Remove(id);
+            using (var context = new CarsContext())
+            {
+                var carToDelete = context.Cars.Find(id);
+                context.Cars.Remove(carToDelete);
+
+                context.SaveChanges();
+            }
         }
     }
 }

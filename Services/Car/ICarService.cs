@@ -4,7 +4,7 @@ namespace minimal_api.Services
 {
     public interface ICarService
     {
-        Dictionary<Guid, Car> GetAllCars();
+        List<Car> GetAllCars();
         Car GetById(Guid id);
         void Create(Car car);
         void Update(Guid id, Car car);
