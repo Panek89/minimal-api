@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
 using minimal_api.Entities;
 using minimal_api.Extensions;
 using minimal_api.Requests;
+using minimal_api.Services;
 
 namespace minimal_api.Routing
 {
@@ -8,29 +10,34 @@ namespace minimal_api.Routing
     {
         public static IEndpointRouteBuilder MapCarsApi(this IEndpointRouteBuilder routes)
         {
-            routes.MapGet("/cars", CarRequests.GetAllCars)
-                .Produces<List<Car>>(StatusCodes.Status200OK);
+            routes.MapGet("/cars", ([FromServices] ICarService service) => CarRequests.GetAllCars(service))
+                .Produces<List<Car>>(StatusCodes.Status200OK)
+                .WithTags("Cars API");
 
-            routes.MapGet("/cars/{id}", CarRequests.GetById)
+            routes.MapGet("/cars/{id}", ([FromServices] ICarService service, [FromQuery] Guid id) => CarRequests.GetById(service, id))
                 .Produces<Car>(StatusCodes.Status200OK)
-                .Produces(StatusCodes.Status404NotFound);
+                .Produces(StatusCodes.Status404NotFound)
+                .WithTags("Cars API");
 
-            routes.MapPost("/cars", CarRequests.Create)
+            routes.MapPost("/cars", ([FromServices] ICarService service, [FromBody] Car car) => CarRequests.Create(service, car))
                 .Accepts<Car>("Application/Json")
                 .Produces<Car>(StatusCodes.Status201Created)
                 .Produces(StatusCodes.Status400BadRequest)
-                .WithValidator<Car>();
+                .WithValidator<Car>()
+                .WithTags("Cars API");
 
-            routes.MapPut("/cars/{id}", CarRequests.Update)
+            routes.MapPut("/cars/{id}", ([FromServices] ICarService service, [FromQuery] Guid id, [FromBody] Car car) => CarRequests.Update(service, id, car))
                 .Accepts<Car>("Application/Json")
                 .Produces(StatusCodes.Status204NoContent)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)
-                .WithValidator<Car>();
+                .WithValidator<Car>()
+                .WithTags("Cars API");
 
-            routes.MapDelete("/cars/{id}", CarRequests.Delete)
+            routes.MapDelete("/cars/{id}", ([FromServices] ICarService service, [FromQuery] Guid id) => CarRequests.Delete(service, id))
                 .Produces(StatusCodes.Status204NoContent)
-                .Produces(StatusCodes.Status404NotFound);
+                .Produces(StatusCodes.Status404NotFound)
+                .WithTags("Cars API");
             
             return routes;
         }
