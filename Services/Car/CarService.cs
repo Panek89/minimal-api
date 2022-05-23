@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using minimal_api.DB;
 using minimal_api.Entities;
 
@@ -13,23 +14,23 @@ namespace minimal_api.Services
 
         private readonly Dictionary<Guid, Car> _cars = new();
 
-        public List<Car> GetAllCars()
+        public async Task<List<Car>> GetAllCars()
         {
             using (var context = new CarsContext())
             {
-                return context.Cars.ToList();
+                return await context.Cars.ToListAsync();
             }
         }
 
-        public Car GetById(Guid id)
+        public async Task<Car> GetById(Guid id)
         {
             using (var context = new CarsContext())
             {
-                return context.Cars.Find(id);
+                return await context.Cars.FindAsync(id);
             }
         }
 
-        public void Create(Car car)
+        public async Task Create(Car car)
         {
             if (car is null)
             {
@@ -38,16 +39,16 @@ namespace minimal_api.Services
             
             using (var context = new CarsContext())
             {
-                context.Cars.Add(car);
-                context.SaveChanges();
+                await context.Cars.AddAsync(car);
+                await context.SaveChangesAsync();
             }
         }
 
-        public void Update(Guid id, Car car)
+        public async Task Update(Guid id, Car car)
         {
             using (var context = new CarsContext())
             {
-                var existingCar = context.Cars.Find(id);
+                var existingCar = await context.Cars.FindAsync(id);
                 if(existingCar is null) 
                 {
                     return;
@@ -55,18 +56,18 @@ namespace minimal_api.Services
                 existingCar.Manufacturer = car.Manufacturer;
                 existingCar.Model = car.Model;
 
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
         
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
             using (var context = new CarsContext())
             {
-                var carToDelete = context.Cars.Find(id);
+                var carToDelete = await context.Cars.FindAsync(id);
                 context.Cars.Remove(carToDelete);
 
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
     }

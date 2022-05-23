@@ -4,10 +4,10 @@ namespace minimal_api.Services
 {
     public interface ICarService
     {
-        List<Car> GetAllCars();
-        Car GetById(Guid id);
-        void Create(Car car);
-        void Update(Guid id, Car car);
-        void Delete(Guid id);
+        Task<List<Car>> GetAllCars();
+        Task<Car> GetById(Guid id);
+        Task Create(Car car);
+        Task Update(Guid id, Car car);
+        Task Delete(Guid id);
     }
 }

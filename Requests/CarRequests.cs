@@ -6,38 +6,38 @@ namespace minimal_api.Requests
 {
     public class CarRequests
     {
-        public static IResult GetAllCars(ICarService service)
+        public static async Task<IResult> GetAllCars(ICarService service)
         {
-            var cars = service.GetAllCars();
+            var cars = await service.GetAllCars();
 
             return Results.Ok(cars);
         }
 
-        public static IResult GetById(ICarService service, Guid id)
+        public static async Task<IResult> GetById(ICarService service, Guid id)
         {
-            var carById = service.GetById(id);
+            var carById = await service.GetById(id);
             if (carById is null)
                 return Results.NotFound();
 
             return Results.Ok(carById);
         }
 
-        public static IResult Create(ICarService service, Car car)
+        public static async Task<IResult> Create(ICarService service, Car car)
         {       
-            service.Create(car);
+            await service.Create(car);
 
             return Results.Created($"/cars/{car.Id}", car);
         }
 
-        public static IResult Update(ICarService service, Guid id, Car car)
+        public static async Task<IResult> Update(ICarService service, Guid id, Car car)
         {
             using (var context = new CarsContext())
             {
-                var carForUpdate = context.Cars.Find(id);
+                var carForUpdate = await context.Cars.FindAsync(id);
                 if (carForUpdate is null)
                     return Results.NotFound();
             }
-            service.Update(id, car);
+            await service.Update(id, car);
 
             return Results.NoContent();
         }
