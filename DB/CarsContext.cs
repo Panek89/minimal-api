@@ -5,11 +5,15 @@ namespace minimal_api.DB
 {
     public class CarsContext : DbContext
     {
+        public CarsContext(DbContextOptions<CarsContext> options)
+            : base(options)
+        {
+        }
+
         public DbSet<Car> Cars { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=MinimalApi.sqlite;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,6 +1,8 @@
 using System.Text;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using minimal_api.DB;
 using minimal_api.Routing;
 using minimal_api.Services;
 using minimal_api.Validation;
@@ -11,8 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<ICarService, CarService>();
+builder.Services.AddTransient<ICarService, CarService>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(CarValidator));
+builder.Services.AddDbContext<CarsContext>(
+    options => options.UseSqlite("Data Source=MinimalApi.sqlite;"));
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(cfg => 
