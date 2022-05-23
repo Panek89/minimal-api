@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using minimal_api.Dtos;
 using minimal_api.Entities;
 using minimal_api.Extensions;
 using minimal_api.Requests;
@@ -20,14 +21,14 @@ namespace minimal_api.Routing
                 .WithTags("Cars API");
 
             routes.MapPost("/cars", ([FromServices] ICarService service, [FromBody] Car car) => CarRequests.Create(service, car))
-                .Accepts<Car>("Application/Json")
+                .Accepts<CarDto>("Application/Json")
                 .Produces<Car>(StatusCodes.Status201Created)
                 .Produces(StatusCodes.Status400BadRequest)
                 .WithValidator<Car>()
                 .WithTags("Cars API");
 
             routes.MapPut("/cars/{id}", ([FromServices] ICarService service, [FromQuery] Guid id, [FromBody] Car car) => CarRequests.Update(service, id, car))
-                .Accepts<Car>("Application/Json")
+                .Accepts<CarDto>("Application/Json")
                 .Produces(StatusCodes.Status204NoContent)
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)

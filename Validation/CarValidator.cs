@@ -7,11 +7,12 @@ namespace minimal_api.Validation
     {
         public CarValidator()
         {
-            RuleFor(p => p.Manufacturer)
+            RuleFor(car => car.Manufacturer)
                 .NotEmpty()
-                .MinimumLength(3);
+                .MinimumLength(3)
+                .NotEqual(car => car.Model);
             
-            RuleFor(p => p.Model)
+            RuleFor(car => car.Model)
                 .NotEmpty()
                 .MinimumLength(3);
         }
