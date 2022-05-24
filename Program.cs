@@ -15,7 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICarService, CarService>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(CarValidator));
-builder.Services.AddDbContext<CarsContext>(
+builder.Services.AddDbContext<MinApiContext>(
     options => options.UseSqlite("Data Source=MinimalApi.sqlite;"));
 
 builder.Services.AddAuthentication("Bearer")

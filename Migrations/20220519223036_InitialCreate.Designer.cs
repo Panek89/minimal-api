@@ -10,7 +10,7 @@ using minimal_api.DB;
 
 namespace minimal_api.Migrations
 {
-    [DbContext(typeof(CarsContext))]
+    [DbContext(typeof(MinApiContext))]
     [Migration("20220519223036_InitialCreate")]
     partial class InitialCreate
     {
