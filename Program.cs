@@ -6,6 +6,8 @@ using minimal_api.DB;
 using minimal_api.DB.Seed;
 using minimal_api.Routing;
 using minimal_api.Services;
+using minimal_api.Services.Auth;
+using minimal_api.Services.UserService;
 using minimal_api.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +17,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDbSeeder, DbSeeder>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICarService, CarService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(CarValidator));
 builder.Services.AddDbContext<MinApiContext>(
     options => options.UseSqlite("Data Source=MinimalApi.sqlite;"));
@@ -48,6 +52,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapCarsApi();
+app.MapUserApi();
 
 using(var scope = app.Services.CreateScope())
 {
