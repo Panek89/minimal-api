@@ -10,7 +10,7 @@ using minimal_api.DB;
 namespace minimal_api.Migrations
 {
     [DbContext(typeof(MinApiContext))]
-    partial class CarsContextModelSnapshot : ModelSnapshot
+    partial class MinApiContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -66,9 +66,23 @@ namespace minimal_api.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("RoleId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("minimal_api.Entities.User", b =>
+                {
+                    b.HasOne("minimal_api.Entities.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId");
+
+                    b.Navigation("Role");
                 });
 #pragma warning restore 612, 618
         }

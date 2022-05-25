@@ -4,5 +4,7 @@ namespace minimal_api.Entities
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; }
+
+        List<User> Users { get; set; }
     }
 }
