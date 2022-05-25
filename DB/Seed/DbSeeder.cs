@@ -22,6 +22,15 @@ namespace minimal_api.DB.Seed
         public async Task Seed()
         {
             _logger.LogInformation("Try to seed");
+
+            if (!_context.Cars.Any())
+            {
+                _logger.LogInformation("Start seed cars");
+                await _context.Cars.AddRangeAsync(GenerateCars());
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Cars seed completed");
+            }
+
             if (!_context.Roles.Any())
             {
                 _logger.LogInformation("Start seed Roles");
@@ -37,6 +46,7 @@ namespace minimal_api.DB.Seed
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Users seed completed");
             }
+
         }
 
         private IEnumerable<User> GenerateAdminUsers()
@@ -60,6 +70,22 @@ namespace minimal_api.DB.Seed
             };
 
             return adminUsers;
+        }
+
+        private IEnumerable<Car> GenerateCars()
+        {
+            IEnumerable<Car> cars = new[] {
+                new Car() {
+                    Manufacturer = "BMW",
+                    Model = "E38"
+                },
+                new Car() {
+                    Manufacturer = "Audi",
+                    Model = "A4"
+                }
+            };
+
+            return cars;
         }
     }
 }
