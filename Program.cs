@@ -21,6 +21,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(CarValidator));
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(UserValidator));
 builder.Services.AddDbContext<MinApiContext>(
     options => options.UseSqlite("Data Source=MinimalApi.sqlite;"));
 
