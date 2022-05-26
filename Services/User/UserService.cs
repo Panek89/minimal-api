@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using minimal_api.DB;
 using minimal_api.Entities;
@@ -7,10 +8,12 @@ namespace minimal_api.Services.UserService
     public class UserService : IUserService
     {
         private readonly MinApiContext _context;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public UserService(MinApiContext context)
+        public UserService(MinApiContext context, IPasswordHasher<User> passwordHasher)
         {
             _context = context;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<List<User>> GetAll()
@@ -35,6 +38,9 @@ namespace minimal_api.Services.UserService
             {
                 user.Role = _context.Roles.FirstOrDefault();
             }
+
+            var hashedPassword = _passwordHasher.HashPassword(user, user.Password);
+            user.Password = hashedPassword;
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();

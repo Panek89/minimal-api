@@ -1,9 +1,11 @@
 using System.Text;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using minimal_api.DB;
 using minimal_api.DB.Seed;
+using minimal_api.Entities;
 using minimal_api.Routing;
 using minimal_api.Services;
 using minimal_api.Services.Auth;
@@ -20,6 +22,7 @@ builder.Services.AddScoped<IDbSeeder, DbSeeder>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(CarValidator));
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(UserValidator));
 builder.Services.AddDbContext<MinApiContext>(

@@ -18,6 +18,10 @@ namespace minimal_api.Validation
                 .MinimumLength(3)
                 .MaximumLength(20);
 
+            RuleFor(user => user.Login)
+                .NotEmpty()
+                .EmailAddress();
+
             RuleFor(user => user.Password)
                 .NotEmpty();
         }
