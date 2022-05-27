@@ -1,11 +1,13 @@
+using Microsoft.AspNetCore.Identity;
 using minimal_api.Entities;
 
 namespace minimal_api.DB.Seed
 {
     public class DbSeeder : IDbSeeder
     {
-        private readonly MinApiContext _context;
         private readonly ILogger<DbSeeder> _logger;
+        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly MinApiContext _context;
 
         private readonly static IEnumerable<Role> initRoles = new[] {
             new Role() { Name = "Admin" },
@@ -13,10 +15,11 @@ namespace minimal_api.DB.Seed
             new Role() { Name = "Guest" }
         };
 
-        public DbSeeder(MinApiContext context, ILogger<DbSeeder> logger)
+        public DbSeeder(ILogger<DbSeeder> logger, IPasswordHasher<User> passwordHasher, MinApiContext context)
         {
-            _context = context;
             _logger = logger;
+            _passwordHasher = passwordHasher;
+            _context = context;
         }
 
         public async Task Seed()
@@ -68,6 +71,12 @@ namespace minimal_api.DB.Seed
                     Role = AdminRole
                 }
             };
+            
+            foreach (var adminUser in adminUsers)
+            {
+                var hashedAdminUserPassword = _passwordHasher.HashPassword(adminUser, adminUser.Password);
+                adminUser.Password = hashedAdminUserPassword;
+            }
 
             return adminUsers;
         }

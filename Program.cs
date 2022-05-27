@@ -41,7 +41,10 @@ builder.Services.AddAuthentication("Bearer")
                 Encoding.UTF8.GetBytes(builder.Configuration["JwtSigningKey"]))
         };
     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(cfg => {
+    cfg.AddPolicy("AdminsOnly", p => p.RequireRole("Admin"));
+    cfg.AddPolicy("UsersOnly", p => p.RequireRole("User"));
+});
 
 var app = builder.Build();
 
