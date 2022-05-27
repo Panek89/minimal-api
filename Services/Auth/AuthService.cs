@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using minimal_api.DB;
 using minimal_api.Entities;
+using minimal_api.Models.Consts;
 using minimal_api.Models.DTOs;
 
 namespace minimal_api.Services.Auth
@@ -20,6 +21,20 @@ namespace minimal_api.Services.Auth
             _config = config;
             _passwordHasher = passwordHasher;
             _context = context;
+        }
+
+        public async Task Register(User user)
+        {
+            if (user.Role == null) 
+            {
+                user.Role = _context.Roles.FirstOrDefault(x => x.Name == UserRolesValues.Guest);
+            }
+
+            var hashedPassword = _passwordHasher.HashPassword(user, user.Password);
+            user.Password = hashedPassword;
+
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
         }
 
         public string GenerateToken(User user, UserLoginDto userLoginDto)

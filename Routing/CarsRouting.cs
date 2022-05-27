@@ -15,19 +15,19 @@ namespace minimal_api.Routing
         {
             routes.MapGet("/cars", [Authorize(ConfiguredUserPoliciesValues.AdminsAndUsers)] ([FromServices] ICarService service) => CarRequests.GetAllCars(service))
                 .Produces<List<Car>>(StatusCodes.Status200OK)
-                .WithTags("Cars API");
+                .WithTags(ApiNamesValues.CarsApi);
 
             routes.MapGet("/cars/{id}", ([FromServices] ICarService service, [FromQuery] Guid id) => CarRequests.GetById(service, id))
                 .Produces<Car>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status404NotFound)
-                .WithTags("Cars API");
+                .WithTags(ApiNamesValues.CarsApi);
 
             routes.MapPost("/cars", ([FromServices] ICarService service, [FromBody] Car car) => CarRequests.Create(service, car))
                 .Accepts<CarDto>("Application/Json")
                 .Produces<Car>(StatusCodes.Status201Created)
                 .Produces(StatusCodes.Status400BadRequest)
                 .WithValidator<Car>()
-                .WithTags("Cars API");
+                .WithTags(ApiNamesValues.CarsApi);
 
             routes.MapPut("/cars/{id}", ([FromServices] ICarService service, [FromQuery] Guid id, [FromBody] Car car) => CarRequests.Update(service, id, car))
                 .Accepts<CarDto>("Application/Json")
@@ -35,12 +35,12 @@ namespace minimal_api.Routing
                 .Produces(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status404NotFound)
                 .WithValidator<Car>()
-                .WithTags("Cars API");
+                .WithTags(ApiNamesValues.CarsApi);
 
             routes.MapDelete("/cars/{id}", ([FromServices] ICarService service, [FromQuery] Guid id) => CarRequests.Delete(service, id))
                 .Produces(StatusCodes.Status204NoContent)
                 .Produces(StatusCodes.Status404NotFound)
-                .WithTags("Cars API");
+                .WithTags(ApiNamesValues.CarsApi);
             
             return routes;
         }

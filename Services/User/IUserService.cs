@@ -7,7 +7,6 @@ namespace minimal_api.Services.UserService
         Task<List<User>> GetAll();
         Task<User> GetById(Guid id);
         Task<User> GetByLogin(string login);
-        Task Register(User user);
         Task Delete(User user);
         Task DeleteMany(List<Guid> ids);
     }

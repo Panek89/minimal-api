@@ -5,6 +5,7 @@ namespace minimal_api.Services.Auth
 {
     public interface IAuthService
     {
+        Task Register(User user);
         string GenerateToken(User user, UserLoginDto userLoginDto);
     }
 }

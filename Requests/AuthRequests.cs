@@ -1,3 +1,4 @@
+using minimal_api.Entities;
 using minimal_api.Models.DTOs;
 using minimal_api.Services.Auth;
 using minimal_api.Services.UserService;
@@ -6,6 +7,13 @@ namespace minimal_api.Requests
 {
     public class AuthRequests
     {
+        public static async Task<IResult> Register(IAuthService service, User user)
+        {
+            await service.Register(user);
+
+            return Results.Created("", user);
+        }
+
         public static async Task<IResult> GenerateToken(IAuthService service, IUserService userService, UserLoginDto userLoginDto)
         {
             var userToFind = await userService.GetByLogin(userLoginDto.Login);

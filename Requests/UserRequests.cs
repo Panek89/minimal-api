@@ -1,4 +1,3 @@
-using minimal_api.Entities;
 using minimal_api.Services.UserService;
 
 namespace minimal_api.Requests
@@ -17,13 +16,6 @@ namespace minimal_api.Requests
             var userById = await service.GetById(id);
 
             return Results.Ok(userById);
-        }
-
-        public static async Task<IResult> Register(IUserService service, User user)
-        {
-            await service.Register(user);
-
-            return Results.Created("", user);
         }
 
         public static async Task<IResult> Delete(IUserService service, Guid id)

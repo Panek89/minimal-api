@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using minimal_api.DB;
 using minimal_api.Entities;
-using minimal_api.Models.Consts;
 
 namespace minimal_api.Services.UserService
 {
@@ -39,20 +38,6 @@ namespace minimal_api.Services.UserService
                 .FirstOrDefaultAsync(user => user.Login == login);
 
             return userByLogin;
-        }
-
-        public async Task Register(User user)
-        {
-            if (user.Role == null) 
-            {
-                user.Role = _context.Roles.FirstOrDefault(x => x.Name == UserRolesValues.Guest);
-            }
-
-            var hashedPassword = _passwordHasher.HashPassword(user, user.Password);
-            user.Password = hashedPassword;
-
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(User user)
