@@ -12,9 +12,9 @@ namespace minimal_api.Requests
             return Results.Ok(users);
         }
 
-        public static IResult GetUserById(IUserService service, Guid id)
+        public static async Task<IResult> GetUserById(IUserService service, Guid id)
         {
-            var userById = service.GetById(id);
+            var userById = await service.GetById(id);
 
             return Results.Ok(userById);
         }
@@ -28,7 +28,7 @@ namespace minimal_api.Requests
 
         public static async Task<IResult> Delete(IUserService service, Guid id)
         {
-            var userToDelete = service.GetById(id);
+            var userToDelete = await service.GetById(id);
             if (userToDelete is null)
                 return Results.NotFound();
 

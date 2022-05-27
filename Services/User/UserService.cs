@@ -24,12 +24,20 @@ namespace minimal_api.Services.UserService
             return users;
         }
 
-        public User GetById(Guid id)
+        public async Task<User> GetById(Guid id)
         {
-            var userById = _context.Users.Include(user => user.Role)
-                                         .First(user => user.Id == id);
+            var userById = await _context.Users.Include(user => user.Role)
+                .FirstOrDefaultAsync(user => user.Id == id);
 
             return userById;
+        }
+
+        public async Task<User> GetByLogin(string login)
+        {
+            var userByLogin = await _context.Users.Include(user => user.Role)
+                .FirstOrDefaultAsync(user => user.Login == login);
+
+            return userByLogin;
         }
 
         public async Task Register(User user)
