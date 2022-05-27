@@ -31,7 +31,9 @@ builder.Services.AddDbContext<MinApiContext>(
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(cfg => 
     {
-        cfg.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        cfg.RequireHttpsMetadata = false;
+        cfg.SaveToken = true;
+        cfg.TokenValidationParameters = new TokenValidationParameters
         {
             ValidIssuer = builder.Configuration["JwtValidIssuer"],
             ValidAudience = builder.Configuration["JwtValidIssuer"],
