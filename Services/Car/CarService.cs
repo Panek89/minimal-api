@@ -6,8 +6,8 @@ namespace minimal_api.Services
 {
     public class CarService : ICarService
     {
-        private readonly CarsContext _context;
-        public CarService(CarsContext context)
+        private readonly MinApiContext _context;
+        public CarService(MinApiContext context)
         {
             _context = context;
         }

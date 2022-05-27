@@ -3,14 +3,16 @@ using minimal_api.Entities;
 
 namespace minimal_api.DB
 {
-    public class CarsContext : DbContext
+    public class MinApiContext : DbContext
     {
-        public CarsContext(DbContextOptions<CarsContext> options)
+        public MinApiContext(DbContextOptions<MinApiContext> options)
             : base(options)
         {
         }
 
         public DbSet<Car> Cars { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -19,6 +21,8 @@ namespace minimal_api.DB
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Car>().ToTable("Cars");
+            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<Role>().ToTable("Roles");
         }
     }
 }

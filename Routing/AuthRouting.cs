@@ -1,7 +1,11 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc;
+using minimal_api.Entities;
+using minimal_api.Extensions;
+using minimal_api.Models.Consts;
+using minimal_api.Models.DTOs;
+using minimal_api.Requests;
+using minimal_api.Services.Auth;
+using minimal_api.Services.UserService;
 
 namespace minimal_api.Routing
 {
@@ -9,37 +13,15 @@ namespace minimal_api.Routing
     {
         public static IEndpointRouteBuilder MapAuthApi(this IEndpointRouteBuilder routes, IConfiguration configuration)
         {
-            routes.MapGet("/token", () =>
-            {
-                var claims = new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, "user-id"),
-                    new Claim(ClaimTypes.Name, "Test Name"),
-                    new Claim(ClaimTypes.Role, "Admin"),
-                };
+            routes.MapPost("/auth/register", ([FromServices] IAuthService service, [FromBody] User user) => AuthRequests.Register(service, user))
+                .WithValidator<User>()
+                .WithTags(ApiNamesValues.AuthApi);
 
-                var token = new JwtSecurityToken
-                (
-                    issuer: configuration["JwtValidIssuer"],
-                    audience: configuration["JwtValidIssuer"],
-                    claims: claims,
-                    expires: DateTime.UtcNow.AddDays(60),
-                    notBefore: DateTime.UtcNow,
-                    signingCredentials: new SigningCredentials(
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSigningKey"])),
-                        SecurityAlgorithms.HmacSha256)
-                );
-
-                var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-                
-                return jwtToken;
-            });
-
-            routes.MapGet("/user", (ClaimsPrincipal user) =>
-            {
-                var userName = user.Identity.Name;
-                return $"Hello {userName}";
-            });
+            routes.MapPost("/auth/token", ([FromServices] IAuthService service, [FromServices] IUserService userService, [FromBody] UserLoginDto userLoginDto) => 
+                        AuthRequests.GenerateToken(service, userService, userLoginDto))
+                .Produces<string>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status404NotFound)
+                .WithTags(ApiNamesValues.AuthApi);
 
             return routes;
         }
