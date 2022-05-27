@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using minimal_api.DB;
 using minimal_api.Entities;
+using minimal_api.Models.Consts;
 
 namespace minimal_api.Services.UserService
 {
@@ -44,7 +45,7 @@ namespace minimal_api.Services.UserService
         {
             if (user.Role == null) 
             {
-                user.Role = _context.Roles.FirstOrDefault();
+                user.Role = _context.Roles.FirstOrDefault(x => x.Name == UserRolesValues.Guest);
             }
 
             var hashedPassword = _passwordHasher.HashPassword(user, user.Password);

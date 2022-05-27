@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using minimal_api.DB;
 using minimal_api.DB.Seed;
 using minimal_api.Entities;
+using minimal_api.Models.Consts;
 using minimal_api.Routing;
 using minimal_api.Services;
 using minimal_api.Services.Auth;
@@ -42,8 +43,10 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 builder.Services.AddAuthorization(cfg => {
-    cfg.AddPolicy("AdminsOnly", p => p.RequireRole("Admin"));
-    cfg.AddPolicy("UsersOnly", p => p.RequireRole("User"));
+    cfg.AddPolicy(ConfiguredUserPoliciesValues.AdminsOnly, p => p.RequireRole(UserRolesValues.Admin));
+    cfg.AddPolicy(ConfiguredUserPoliciesValues.UsersOnly, p => p.RequireRole(UserRolesValues.User));
+    cfg.AddPolicy(ConfiguredUserPoliciesValues.GuestsOnly, p => p.RequireRole(UserRolesValues.Guest));
+    cfg.AddPolicy(ConfiguredUserPoliciesValues.AdminsAndUsers, p => p.RequireRole(UserRolesValues.Admin, UserRolesValues.User));
 });
 
 var app = builder.Build();

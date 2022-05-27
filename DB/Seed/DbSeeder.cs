@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using minimal_api.Entities;
+using minimal_api.Models.Consts;
 
 namespace minimal_api.DB.Seed
 {
@@ -10,9 +11,9 @@ namespace minimal_api.DB.Seed
         private readonly MinApiContext _context;
 
         private readonly static IEnumerable<Role> initRoles = new[] {
-            new Role() { Name = "Admin" },
-            new Role() { Name = "User" },
-            new Role() { Name = "Guest" }
+            new Role() { Name = UserRolesValues.Admin },
+            new Role() { Name = UserRolesValues.User },
+            new Role() { Name = UserRolesValues.Guest }
         };
 
         public DbSeeder(ILogger<DbSeeder> logger, IPasswordHasher<User> passwordHasher, MinApiContext context)
@@ -54,7 +55,7 @@ namespace minimal_api.DB.Seed
 
         private IEnumerable<User> GenerateAdminUsers()
         {
-            var AdminRole = _context.Roles.FirstOrDefault(r => r.Name == "Admin");
+            var AdminRole = _context.Roles.FirstOrDefault(r => r.Name == UserRolesValues.Admin);
             IEnumerable<User> adminUsers = new[] {
                 new User() {
                     FirstName = "Admin",

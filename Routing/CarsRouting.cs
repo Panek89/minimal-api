@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using minimal_api.Dtos;
 using minimal_api.Entities;
 using minimal_api.Extensions;
+using minimal_api.Models.Consts;
 using minimal_api.Requests;
 using minimal_api.Services;
 
@@ -12,9 +13,8 @@ namespace minimal_api.Routing
     {
         public static IEndpointRouteBuilder MapCarsApi(this IEndpointRouteBuilder routes)
         {
-            routes.MapGet("/cars", [Authorize("UsersOnly")] ([FromServices] ICarService service) => CarRequests.GetAllCars(service))
+            routes.MapGet("/cars", [Authorize(ConfiguredUserPoliciesValues.AdminsAndUsers)] ([FromServices] ICarService service) => CarRequests.GetAllCars(service))
                 .Produces<List<Car>>(StatusCodes.Status200OK)
-                .RequireAuthorization()
                 .WithTags("Cars API");
 
             routes.MapGet("/cars/{id}", ([FromServices] ICarService service, [FromQuery] Guid id) => CarRequests.GetById(service, id))
